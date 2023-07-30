@@ -3,6 +3,7 @@
 # Install dependencies with:
 # $ cpanm --installdeps .
 
+use feature ":5.30";
 use strict;
 use warnings;
 use autodie;
@@ -11,11 +12,11 @@ use Time::HiRes qw(sleep);
 
 open(my $fh, '<', 'dictionary.txt');
 
-while(my $line = <$fh>) {
-    my @lengths = map { length } split(' ', $line);
-    if("@ARGV" eq "@lengths") {
-        print $line;
-        Clipboard->copy($line);
-        sleep(0.3);
+while(<$fh>) {
+    chomp;
+    if("@ARGV" eq "@{[map { length } split]}") {
+        say;
+        Clipboard->copy($_);
+        sleep(0.1);
     }
 }
