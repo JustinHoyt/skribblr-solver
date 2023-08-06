@@ -9,9 +9,9 @@ use Time::HiRes qw(sleep);
 open(my $fh, '<', 'dictionary.txt');
 
 while(<$fh>) {
-    chomp;
     if("@ARGV" eq "@{[map { length } split]}") {
-        `tty-copy $_`;
+        print;
+        `tty-copy -n $_`;
         sleep(0.5);
     }
 }
