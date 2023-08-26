@@ -9,19 +9,13 @@ usage
 $ ./get_hints.py 3 4
 the pole
 all bird
-
-$ ./get_hints.py 4 _
-the pole
-all bird
-nom nom
-eat doritos
 ```
 '''
 
 import sys
 
 def equals(actual_length: int, expected_length: int | str):
-    return actual_length == expected_length or expected_length == '_'
+    return actual_length == expected_length
 
 def parse(arg: str):
     return int(arg) if arg.isdigit() else arg
