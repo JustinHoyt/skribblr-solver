@@ -1,7 +1,8 @@
 #! /usr/bin/env bun
 
-const lines = (await Bun.file("./dictionary.txt").text()).split(/\n/);
-for (const line of lines) {
+import { $ } from "bun";
+
+for await (const line of $`cat dictionary.txt`.lines()) {
   const actualWordLengths = line.split(/\s+/).map((x) => x.length);
   const expectedWordLengths = process.argv.slice(2).map(Number);
 
