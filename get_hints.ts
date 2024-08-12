@@ -1,10 +1,26 @@
-#! /usr/bin/env bun
+#! /usr/bin/env -S deno run -A
 
-import { $ } from "bun";
+import { TextLineStream } from "jsr:@std/streams/text-line-stream";
 
-for await (const line of $`cat dictionary.txt`.lines()) {
-  const actualWordLengths = line.split(/\s+/).map((x) => x.length);
-  const expectedWordLengths = process.argv.slice(2).map(Number);
+class filterMatches extends TransformStream<string, string> {
+  constructor(expectedWordLengths: string) {
+    super({
+      transform: (line, controller) => {
+        const actualWordLengths = line
+          .split(/\s+/)
+          .map((x) => x.length)
+          .join(" ");
 
-  if (Bun.deepEquals(actualWordLengths, expectedWordLengths)) console.log(line);
+        if (actualWordLengths === expectedWordLengths) {
+          controller.enqueue(line);
+        }
+      },
+    });
+  }
 }
+
+await Deno.openSync("./dictionary.txt").readable
+  .pipeThrough(new TextDecoderStream())
+  .pipeThrough(new TextLineStream())
+  .pipeThrough(new filterMatches(Deno.args.join(" ")))
+  .pipeTo(new WritableStream({ write: (line) => console.log(line) }));

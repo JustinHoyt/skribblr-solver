@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  },
+  "imports": {
+    "@std/io": "jsr:@std/io@^0.224.4",
+    "@std/streams": "jsr:@std/streams@^1.0.1"
+  }
+}
